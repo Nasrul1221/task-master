@@ -3,22 +3,21 @@ const pool = require('../db/db')
 // CRUD
 async function createTask(req, res) {
     try {
-        const {userId, categoryId, title, content} = req.body
+        const {categoryId, title, content} = req.body
 
         const createdTask = await pool.query('INSERT INTO tasks (user_id, category_id, title, task_content) VALUES ($1, $2, $3, $4) RETURNING *', [userId, categoryId, title, content])
 
         res.json(createdTask.rows[0])
     }
     catch (error) {
-        res.json({
-            error
-        })
+        console.log(error)
+        res.status(500).json({ msg: 'Server error' })
     }
 }
 
 async function readTasks(req, res) {
     try {
-        const {userId} = req.body
+        const userId = req.user.id
         const {category, search} = req.query
 
         let query = 'SELECT tasks.*, categories.name AS category_name FROM tasks LEFT JOIN categories ON tasks.category_id = categories.id WHERE tasks.user_id = $1';
@@ -43,10 +42,9 @@ async function readTasks(req, res) {
             tasks: tasks.rows,
         })
     }
-    catch (err) {
-        res.json({
-            err
-        })
+    catch (error) {
+        console.log(error)
+        res.status(500).json({ msg: 'Server error' })
     }
 }
 
@@ -73,10 +71,9 @@ async function readTaskDetail(req, res) {
             task: task.rows[0]
         })
     }
-    catch (err) {
-        res.json({
-            err
-        })
+    catch (error) {
+        console.log(error)
+        res.status(500).json({ msg: 'Server error' })
     }
 }
 
@@ -103,8 +100,9 @@ async function updateTask(req, res) {
             updatedTask
         })
     }
-    catch (err) {
-        res.json({err})
+    catch (error) {
+        console.log(error)
+        res.status(500).json({ msg: 'Server error' })
     }
 }
 
@@ -131,8 +129,9 @@ async function deleteTask(req, res) {
             deletedTask
         })
     }
-    catch (err) {
-        res.json({err})
+    catch (error) {
+        console.log(error)
+        res.status(500).json({ msg: 'Server error' })
     }
 }
 

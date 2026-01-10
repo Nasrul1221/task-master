@@ -6,10 +6,6 @@ const createRules = [
     body('title').trim().notEmpty().isLength({max: 30})
 ]
 
-const readRules = [
-    body('userId').notEmpty().isNumeric(),
-]
-
 const readDetailsRules = [
     body('userId').notEmpty().isNumeric(),
     param('taskId').trim().notEmpty().isNumeric()
@@ -26,7 +22,6 @@ const deleteRules = [
 
 module.exports = {
     createRules,
-    readRules,
     readDetailsRules,
     updateRules,
     deleteRules

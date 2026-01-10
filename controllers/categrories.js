@@ -13,7 +13,8 @@ async function createCategory(req, res) {
         })
     }
     catch (error) {
-        res.json({error})
+        console.log(error)
+        res.status(500).json({ msg: 'Server error' })
     }
 }
 
@@ -28,7 +29,8 @@ async function readCategories(req, res) {
         })
     }
     catch (error) {
-        res.json({error})
+        console.log(error)
+        res.status(500).json({ msg: 'Server error' })
     }
 }
 
@@ -56,7 +58,8 @@ async function updateCategory(req, res) {
         })
     }
     catch (error) {
-        res.json({error})
+        console.log(error)
+        res.status(500).json({ msg: 'Server error' })
     }
 }
 
@@ -84,7 +87,8 @@ async function deleteCategory(req, res) {
         })
     }
     catch (error) {
-        res.json({error})
+        console.log(error)
+        res.status(500).json({ msg: 'Server error' })
     }
 }
 
