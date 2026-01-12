@@ -22,11 +22,5 @@ API for tasks handling
 | Variable | Description | Example |
 | :--- | :--- | :--- |
 | PORT | The port on which your program runs | `3000` |
-| DATABASE_URL | Used to connect your database. You can either use the connection URL or the programmatic approach. | `postgresql://dbuser:secretpassword@database.server.com:3211/mydb` |
-| JWT_SECRET_KEY | Needed for signing and verifying JWT tokens | `09d25...` |
-
-| Variable | Description | Example |
-| :--- | :--- | :--- |
-| PORT | The port on which your program runs | `3000` |
 | DATABASE_URL | Used to connect your database. You can either use the connection URL or the programmatic approach. However, using the second one, you're going to need a bit more ENV variables. See [node-posgres](https://node-postgres.com/features/connecting) | `postgresql://dbuser:secretpassword@database.server.com:3211/mydb` |
 | JWT_SECRET_KEY | Needed for signing and verifying JWT tokens | `09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7` |
