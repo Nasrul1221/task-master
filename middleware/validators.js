@@ -33,6 +33,27 @@ const deleteCategoryVal = [
     param('categoryId').trim().notEmpty().withMessage('categoryId is empty!').isNumeric().withMessage('categoryId is not a number')
 ]
 
+// LOGIN & REGISTER
+const loginVal = [
+    body('username')
+        .exists({values: 'falsy'})
+        .withMessage("username is required")
+        .isString()
+        .withMessage('username must be a string'),
+    body('password')
+        .exists({values: 'falsy'})
+        .withMessage('password is required')
+        .isString()
+        .withMessage("password must be a string")
+        .isLength({min: 5})
+        .withMessage('password must be at least 5 chars')
+]
+
+const registerVal = [
+    ...loginVal,
+    body('email').isEmail().withMessage('email is invalid')
+]
+
 module.exports = {
     createTasksVal,
     readTaskDetailsVal,
@@ -41,5 +62,8 @@ module.exports = {
 
     createCategoryVal,
     updateCategoryVal,
-    deleteCategoryVal
+    deleteCategoryVal,
+
+    loginVal,
+    registerVal
 }

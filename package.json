@@ -1,4 +1,16 @@
 {
+  "name": "task-master-api",
+    "version": "1.0.0",
+    "description": "",
+    "license": "ISC",
+    "author": "Nasrul",
+    "type": "commonjs",
+    "main": "app.js",
+    "scripts": {
+      "start": "node app.js",
+      "dev": "node --watch app.js",
+      "populatedb": "node db/runDb.js"
+  },
   "dependencies": {
     "bcrypt": "^6.0.0",
     "dotenv": "^17.2.3",
