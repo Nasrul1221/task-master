@@ -18,6 +18,13 @@ API for tasks handling
 
 ### Configuration
 1. **.env file**
+
+| Variable | Description | Example |
+| :--- | :--- | :--- |
+| PORT | The port on which your program runs | `3000` |
+| DATABASE_URL | Used to connect your database. You can either use the connection URL or the programmatic approach. | `postgresql://dbuser:secretpassword@database.server.com:3211/mydb` |
+| JWT_SECRET_KEY | Needed for signing and verifying JWT tokens | `09d25...` |
+
 | Variable | Description | Example |
 | :--- | :--- | :--- |
 | PORT | The port on which your program runs | `3000` |
