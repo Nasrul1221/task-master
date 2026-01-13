@@ -63,3 +63,194 @@ CREATE TABLE IF NOT EXISTS users
      completed BOOLEAN NOT NULL DEFAULT false
  )
 ```
+### Launching
+There are two ways to launch the API.
+1. `npm run start` - *node app.js*
+2. `npm run dev` - *node --watch app.js*. This way automatically restarts the API after every change you make.
+
+## API General Reference
+
+### Auth
+| Method | Endpoint | Description | Access |
+| :--- | :--- | :--- | :---|
+| POST | [/auth/login](#post-authlogin) | Signing in and creating a new JWT token | Public |
+| POST | [/auth/register](#post-authregister) | Register a new user | Public |
+
+### Tasks
+| Method | Endpoint | Description | Access |
+| :--- | :--- | :--- | :---|
+| GET | [/tasks](#get-tasks) | Returns all user's tasks | Private |
+| GET | [/tasks/:id](#get-tasksid) | Returns a user's task by id | Private |
+| POST | [/tasks](#post-tasks) | Creates a new task | Private |
+| PUT | [/tasks/:id](#post-tasksid) | Updates a task | Private |
+| DELETE | [/tasks/:id](#delete-tasksid) | Deletes a task | Private |
+
+### Categories
+| Method | Endpoint | Description | Access |
+| :--- | :--- | :--- | :---|
+| GET | [/categories](#get-categories) | Returns all user's categories | Private |
+| POST | [/categories](#post-categories) | Creates a new category | Private |
+| PUT | [/categories/:id](put-categoriesid) | Updates a category | Private |
+| DELETE | [/categories/:id](delete-categoriesid) | Deletes a category | Private |
+
+## API Details
+
+### POST /auth/login
+- **Description:** Authenticates the user and issues a JWT access token.
+- **Request body:**
+  ```json
+    {
+        "username": "STRING (required)",
+        "password": "STRING (required)", 
+    }
+  ```
+- **Success Response:**
+  Status 200 OK
+  ```json
+    {
+        "token": "<jwt_token>"
+    }
+    ```
+- **Error Response**: Status 401 Unauthorized
+> [!IMPORTANT]
+> This API **does not provide refresh tokens** only a single acces token upon login.
+
+---
+### POST /auth/register
+- **Description:** Creates a new user
+- **Request body:**
+  ```json
+    {
+        "username": "STRING (required)"  UNIQUE,
+        "password": "STRING (required)",
+        "email": "STRING (required)" UNIQUE
+    }
+  ```
+- **Success Response:**
+  Status 201 CREATED
+- **Error Response:** Status 409 Conflict
+
+---
+### GET /tasks
+- **Description:** Returns an array of all user's tasks
+- **Authentication**: Yes
+- **Query strings:**
+  | Parameter | Type | Required |Description |
+  | :--- | :--- | :--- | :--- |
+  | `category` | string | No | Filter tasks by the name of a category|
+  | `search` | string | No | Filter tasks by the key word |
+
+  If parameters are provided, but the values are not, all tasks are returned.
+- **Success Response:**
+  Status 200 OK
+  ```json
+    {
+        "count": tasks.rowCount,
+        "tasks": tasks.rows
+    }
+  ```
+
+---
+### GET /tasks/:id
+- **Description:** Returns a task by the id.
+- **Authentication**: Yes
+- **Success Response:** Status 200 OK
+  ```json
+    {
+        "task": tasks.rows[0]
+    }
+  ```
+- **Error Response:** Status 404 Not Found
+
+---
+### POST /tasks
+- **Description:** Creates a new task.
+- **Request body:**
+  ```json
+    {
+        "categoryId": "INTEGER | NULL (optional)",
+        "title": "STRING (required)",
+        "Content": "STRING (optional)"
+    }
+  ```
+- **Authentication**: Yes
+- **Success Response:** Status 201 Created
+
+---
+### PUT /tasks/:id
+- **Description:** Updates a task by the id.
+- **Request body:**
+  ```json
+    {
+        "categoryId": "INTEGER | NULL (required)",
+        "title": "STRING (required)",
+        "Content": "STRING (required)"
+    }
+  ```
+- **Authentication**: Yes
+- **Success Response:** Status 200 OK
+  ```json
+    {
+        "updatedTask": updatedTask.rows[0]
+    }
+  ```
+- **Error Response:** Status 404 Not Found
+
+---
+### DELETE /tasks/:id
+- **Description:** Deletes a task by the id.
+- **Authentication**: Yes
+- **Success Response:** Status 204 No Content
+- **Error Response:** Status 404 Not Found
+
+---
+
+### GET /categories
+- **Description:** Returnes an array of all user's categories.
+- **Authentication**: Yes
+- **Success Response:** Status 200 OK
+  ```json
+    {
+        "categories": categories.rows
+    }
+  ```
+
+---
+
+### POST /categories
+- **Description:** Creates a new category.
+- **Request body:**
+  ```json
+    {
+        "name": "STRING (required)"
+    }
+  ```
+- **Authentication**: Yes
+- **Success Response:** Status 201 Created
+
+---
+
+### PUT /categories/:id
+- **Description:** Updates a category by the id.
+- **Request body:**
+  ```json
+    {
+        "name": "STRING (required)"
+    }
+  ```
+- **Authentication**: Yes
+- **Success Response:** Status 200 OK
+  ```json
+    {
+        "updatedCategory": updatedCategory.rows[0]
+    }
+  ```
+- **Error Response:** Status 404 Not Found
+
+---
+
+### DELETE /categories/:id
+- **Description:** Deletes a category by the id.
+- **Authentication**: Yes
+- **Success Response:** Status 204 No Content
+- **Error Response:** Status 404 Not Found
