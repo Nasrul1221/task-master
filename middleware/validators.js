@@ -2,7 +2,7 @@ const {body, query, param} = require('express-validator')
 
 // TASKS 
 const createTasksVal = [
-    body('categoryId').optional().isNumeric().withMessage('categoryId is not a number!'),
+    body('categoryId').optional({values: 'null'}).isNumeric().withMessage('categoryId is not a number!'),
     body('title').trim().notEmpty().withMessage('title is empty!').isLength({max: 30}).withMessage('The max length is 30')
 ]
 

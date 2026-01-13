@@ -73,14 +73,14 @@ There are two ways to launch the API.
 ### Auth
 | Method | Endpoint | Description | Access |
 | :--- | :--- | :--- | :---|
-| POST | [/auth/login](#post-authlogin) | Signing in and creating a new JWT token | Public |
+| POST | [/auth/login](#post-authlogin) | Signs in and issues a JWT token | Public |
 | POST | [/auth/register](#post-authregister) | Register a new user | Public |
 
 ### Tasks
 | Method | Endpoint | Description | Access |
 | :--- | :--- | :--- | :---|
-| GET | [/tasks](#get-tasks) | Returns all user's tasks | Private |
-| GET | [/tasks/:id](#get-tasksid) | Returns a user's task by id | Private |
+| GET | [/tasks](#get-tasks) | Returns an array of all user tasks |
+| GET | [/tasks/:id](#get-tasksid) | Returns a task by ID | Private |
 | POST | [/tasks](#post-tasks) | Creates a new task | Private |
 | PUT | [/tasks/:id](#post-tasksid) | Updates a task | Private |
 | DELETE | [/tasks/:id](#delete-tasksid) | Deletes a task | Private |
@@ -88,7 +88,7 @@ There are two ways to launch the API.
 ### Categories
 | Method | Endpoint | Description | Access |
 | :--- | :--- | :--- | :---|
-| GET | [/categories](#get-categories) | Returns all user's categories | Private |
+| GET | [/categories](#get-categories) | Returns an array of all user categories | Private |
 | POST | [/categories](#post-categories) | Creates a new category | Private |
 | PUT | [/categories/:id](#put-categoriesid) | Updates a category | Private |
 | DELETE | [/categories/:id](#delete-categoriesid) | Deletes a category | Private |
@@ -111,9 +111,11 @@ There are two ways to launch the API.
         "token": "<jwt_token>"
     }
     ```
-- **Error Response**: Status 401 Unauthorized
+- **Error Response**: 
+  - Status 401 Unauthorized
+  - Status 400 Bad Request
 > [!IMPORTANT]
-> This API **does not provide refresh tokens** only a single acces token upon login.
+> This API **does not provide refresh tokens** only a single access token upon login.
 
 ---
 ### POST /auth/register
@@ -128,7 +130,9 @@ There are two ways to launch the API.
   ```
 - **Success Response:**
   Status 201 CREATED
-- **Error Response:** Status 409 Conflict
+- **Error Response:** 
+  - Status 409 Conflict
+  - Status 400 Bad Request
 
 ---
 ### GET /tasks
@@ -145,10 +149,24 @@ There are two ways to launch the API.
   Status 200 OK
   ```json
     {
-        "count": tasks.rowCount,
-        "tasks": tasks.rows
+      "count": 1,
+      "tasks": [
+          {
+              "id": 38,
+              "user_id": 1,
+              "category_id": 2,
+              "title": "Housework",
+              "task_content": "Clean the kitchen",
+              "created_at": "2026-01-10T11:44:48.703Z",
+              "updated_at": "2026-01-10T11:44:48.703Z",
+              "completed": false,
+              "category_name": "Common things"
+          }
+      ]
     }
   ```
+- **Error Response:**
+  - Status 401 Unauthorized
 
 ---
 ### GET /tasks/:id
@@ -157,10 +175,22 @@ There are two ways to launch the API.
 - **Success Response:** Status 200 OK
   ```json
     {
-        "task": tasks.rows[0]
+      "task": {
+        "id": 28,
+        "user_id": 1,
+        "category_id": 5,
+        "title": "Swimming",
+        "task_content": "Go swimming at 15 pm yesterday",
+        "created_at": "2026-01-10T11:29:17.660Z",
+        "updated_at": "2026-01-10T11:29:17.660Z",
+        "completed": false
+      }
     }
   ```
-- **Error Response:** Status 404 Not Found
+- **Error Response:** 
+  - Status 404 Not Found
+  - Status 400 Bad Request
+  - Status 401 Unauthorized
 
 ---
 ### POST /tasks
@@ -175,6 +205,9 @@ There are two ways to launch the API.
   ```
 - **Authentication**: Yes
 - **Success Response:** Status 201 Created
+- **Error Response:**
+  - Status 400 Bad Request
+  - Status 401 Unauthorized
 
 ---
 ### PUT /tasks/:id
@@ -184,24 +217,39 @@ There are two ways to launch the API.
     {
         "categoryId": "INTEGER | NULL (required)",
         "title": "STRING (required)",
-        "Content": "STRING (required)"
+        "content": "STRING (required)"
     }
   ```
 - **Authentication**: Yes
 - **Success Response:** Status 200 OK
   ```json
     {
-        "updatedTask": updatedTask.rows[0]
+      "updatedTask": {
+        "id": 28,
+        "user_id": 1,
+        "category_id": null,
+        "title": "Updated swimming",
+        "task_content": "Updated Content",
+        "created_at": "2026-01-10T11:29:17.660Z",
+        "updated_at": "2026-01-13T15:54:04.568Z",
+        "completed": false
+      }
     }
   ```
-- **Error Response:** Status 404 Not Found
+- **Error Response:** 
+  - Status 404 Not Found
+  - Status 400 Bad Request
+  - Status 401 Unauthorized
 
 ---
 ### DELETE /tasks/:id
 - **Description:** Deletes a task by the id.
 - **Authentication**: Yes
 - **Success Response:** Status 204 No Content
-- **Error Response:** Status 404 Not Found
+- **Error Response:** 
+  - Status 404 Not Found
+  - Status 400 Bad Request
+  - Status 401 Unauthorized
 
 ---
 
@@ -211,9 +259,28 @@ There are two ways to launch the API.
 - **Success Response:** Status 200 OK
   ```json
     {
-        "categories": categories.rows
+      "categories": [
+        {
+            "id": 2,
+            "name": "Common things",
+            "user_id": 1
+        },
+        {
+            "id": 3,
+            "name": "Food",
+            "user_id": 1
+        },
+        {
+            "id": 4,
+            "name": "Sport",
+            "user_id": 1
+        },
+      ]
     }
   ```
+- **Error Response:**
+  - Status 400 Bad Request
+  - Status 401 Unauthorized
 
 ---
 
@@ -227,6 +294,9 @@ There are two ways to launch the API.
   ```
 - **Authentication**: Yes
 - **Success Response:** Status 201 Created
+- **Error Response:**
+  - Status 400 Bad Request
+  - Status 401 Unauthorized
 
 ---
 
@@ -242,10 +312,17 @@ There are two ways to launch the API.
 - **Success Response:** Status 200 OK
   ```json
     {
-        "updatedCategory": updatedCategory.rows[0]
+      "updatedCategory": {
+        "id": 2,
+        "name": "Common things",
+        "user_id": 1
+      }
     }
   ```
-- **Error Response:** Status 404 Not Found
+- **Error Response:**
+  - Status 404 Not Found
+  - Status 400 Bad Request
+  - Status 401 Unauthorized
 
 ---
 
@@ -253,4 +330,21 @@ There are two ways to launch the API.
 - **Description:** Deletes a category by the id.
 - **Authentication**: Yes
 - **Success Response:** Status 204 No Content
-- **Error Response:** Status 404 Not Found
+- **Error Response:**
+  - Status 404 Not Found
+  - Status 400 Bad Request
+  - Status 401 Unauthorized
+
+## Quick Testing
+
+- Registration
+```bash
+curl -X POST http://localhost:3000/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"username": "testuser", "password": "securepassword", "email": "test@example.com"}'
+```
+
+- Receiving tasks
+```bash
+curl -X GET http://localhost:3000/tasks -H "Authorization: Bearer <token>"
+```
